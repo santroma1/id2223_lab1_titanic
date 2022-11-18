@@ -16,7 +16,8 @@ def g():
     import hopsworks
     import pandas as pd
     #imoprt a logistic regression model from sklearn
-    from sklearn.linear_model import LogisticRegression      
+    from sklearn.linear_model import LogisticRegression   
+    from sklearn.ensemble import RandomForestClassifier   
     from sklearn.metrics import accuracy_score
     from sklearn.metrics import confusion_matrix
     from sklearn.metrics import classification_report
@@ -51,7 +52,7 @@ def g():
     X_train, X_test, y_train, y_test = feature_view.train_test_split(0.2)
 
     # Train our model with the Scikit-learn binary classifier algorithm using our features (X_train) and labels (y_train)
-    model = xgb.XGBClassifier()
+    model = RandomForestClassifier(max_depth=8)
     model.fit(X_train, y_train.values.ravel())
 
     # Evaluate model performance using the features from the test set (X_test)
@@ -62,8 +63,8 @@ def g():
     results = confusion_matrix(y_test, y_pred)
 
     # Create the confusion matrix as a figure, we will later store it as a PNG image file
-    df_cm = pd.DataFrame(results, ['True Survived', 'True Dead'], 
-                                    ['Predicted Survived', 'Predicted Dead'])
+    df_cm = pd.DataFrame(results, ['True Dead', 'True Survived'], 
+                                    ['Predicted Dead', 'Predicted Survived'])
                         
     cm = sns.heatmap(df_cm, annot=True)
     fig = cm.get_figure()
