@@ -5,7 +5,7 @@ LOCAL=True
 
 if LOCAL == False:
    stub = modal.Stub()
-   image = modal.Image.debian_slim().apt_install(["libgomp1"]).pip_install(["hopsworks", "seaborn", "joblib", "scikit-learn"])
+   image = modal.Image.debian_slim().apt_install(["libgomp1"]).pip_install(["hopsworks", "seaborn", "joblib", "scikit-learn", "xgboost"])
 
    @stub.function(image=image, schedule=modal.Period(days=1), secret=modal.Secret.from_name("HOPSWORKS_API_KEY"))
    def f():
@@ -21,25 +21,28 @@ def g():
     from sklearn.metrics import confusion_matrix
     from sklearn.metrics import classification_report
     import seaborn as sns
+    import xgboost as xgb
+
+
     from matplotlib import pyplot
     from hsml.schema import Schema
     from hsml.model_schema import ModelSchema
     import joblib
 
     # You have to set the environment variable 'HOPSWORKS_API_KEY' for login to succeed
-    project = hopsworks.login(api_key_value="uXImSp4Z2vZHA7sc.AJCLKvt1mkQ100KJcH4aHDVPNhkGCKUxtYE19sDe7MF0zyPf9zjjodcI0pVTHWmF")
+    project = hopsworks.login()
     # fs is a reference to the Hopsworks Feature Store
     fs = project.get_feature_store()
 
     # The feature view is the input set of features for your model. The features can come from different feature groups.    
     # You can select features from different feature groups and join them together to create a feature view
     try: 
-        feature_view = fs.get_feature_view(name="titanic_modal", version=4)
+        feature_view = fs.get_feature_view(name="titanic_modal", version=8)
     except:
-        titanic_fg = fs.get_feature_group(name="titanic_modal", version=4)
+        titanic_fg = fs.get_feature_group(name="titanic_modal", version=8)
         query = titanic_fg.select_all()
         feature_view = fs.create_feature_view(name="titanic_modal",
-                                          version=4,
+                                          version=8,
                                           description="Read from titanic dataset",
                                           labels=["Survived"],
                                           query=query)    
@@ -48,7 +51,7 @@ def g():
     X_train, X_test, y_train, y_test = feature_view.train_test_split(0.2)
 
     # Train our model with the Scikit-learn binary classifier algorithm using our features (X_train) and labels (y_train)
-    model = LogisticRegression()
+    model = xgb.XGBClassifier()
     model.fit(X_train, y_train.values.ravel())
 
     # Evaluate model performance using the features from the test set (X_test)
