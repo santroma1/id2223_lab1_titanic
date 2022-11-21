@@ -31,7 +31,7 @@ def g():
     fs = project.get_feature_store()
     
     mr = project.get_model_registry()
-    model = mr.get_model("titanic_modal", version=3)
+    model = mr.get_model("titanic_modal", version=4)
     model_dir = model.download()
     model = joblib.load(model_dir + "/titanic_model.pkl")
     
@@ -40,7 +40,7 @@ def g():
     
     y_pred = model.predict(batch_data)
     #print(y_pred)
-    offset = 2
+    offset = 100
     prediction_ = y_pred[y_pred.size-offset]
     prediction_url = "https://raw.githubusercontent.com/santroma1/id2223_lab1_titanic/main/assets/" + label_arr[prediction_] + ".jpg"
     print("Passenger predicted: " + label_arr[prediction_])
@@ -60,7 +60,7 @@ def g():
     dataset_api.upload("./actual_passenger.png", "Resources/images", overwrite=True)
     
     monitor_fg = fs.get_or_create_feature_group(name="titanic_predictions",
-                                                version=1,
+                                                version=2,
                                                 primary_key=["datetime"],
                                                 description="Titanic Prediction/Outcome Monitoring"
                                                 )
