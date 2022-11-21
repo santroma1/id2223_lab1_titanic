@@ -16,23 +16,68 @@ model_dir = model.download()
 model = joblib.load(model_dir + "/titanic_model.pkl")
 
 
-def iris(Pclass, Sex, SibSp, Parch, Embarked, Age_type_kid, Age_type_teen, Age_type_adult,
-         Age_type_elder, Fare_type_low, Fare_type_low_med, Fare_type_medium, Fare_type_high):
+def iris(Pclass, Sex, SibSp, Parch, Embarked, Age, Fare_type):
                 
     input_list = []
     input_list.append(Pclass)
-    input_list.append(Sex)
+    
+    ##############################
+    if Sex=='male':
+        input_list.append(1)
+    else:
+        input_list.append(0)
+    ##############################
+    
     input_list.append(SibSp)
     input_list.append(Parch)
-    input_list.append(Embarked)
-    input_list.append(Age_type_kid)
-    input_list.append(Age_type_teen)
-    input_list.append(Age_type_adult)
-    input_list.append(Age_type_elder)
-    input_list.append(Fare_type_low)
-    input_list.append(Fare_type_low_med)
-    input_list.append(Fare_type_medium)
-    input_list.append(Fare_type_high)
+
+    ##############################  
+    if Embarked=='S':
+        input_list.append(0)
+    elif Embarked=='C':
+        input_list.append(1)
+    else:
+        input_list.append(2)
+    ##############################    
+    
+    ##############################
+    if Age <= 12:
+        one_hot_age = [1, 0, 0, 0, 0]
+        for i in one_hot_age:
+            input_list.append(i)
+    elif Age <= 18:
+        one_hot_age = [0, 1, 0, 0, 0]
+        for i in one_hot_age:
+            input_list.append(i)
+    elif Age <= 30:
+        one_hot_age = [0, 0, 1, 0, 0]
+        for i in one_hot_age:
+            input_list.append(i)
+    elif Age <= 50:
+        one_hot_age = [0, 0, 0, 1, 0]
+        for i in one_hot_age:
+            input_list.append(i)
+    else:
+        one_hot_age = [0, 0, 0, 0, 1]
+        for i in one_hot_age:
+            input_list.append(i)
+    ##############################
+    
+    ##############################
+    if Fare_type == "low":
+        one_hot_fare = [1, 0, 0]
+        for i in one_hot_fare:
+            input_list.append(i)
+    elif Fare_type == "medium": 
+        one_hot_fare = [0, 1, 0]
+        for i in one_hot_fare:
+            input_list.append(i)
+    else:
+        one_hot_fare = [0, 0, 1]
+        for i in one_hot_fare:
+            input_list.append(i)
+    ##############################
+    
     # 'res' is a list of predictions returned as the label.
     res = model.predict(np.asarray(input_list).reshape(1, -1)) 
     # We add '[0]' to the result of the transformed 'res', because 'res' is a list, and we only want 
@@ -53,19 +98,13 @@ demo = gr.Interface(
     description="Experiment to predict whether a passanger survived or not.",
     allow_flagging="never",
     inputs=[
-        gr.inputs.Number(default=1.0, label="Cabin class (1st, 2nd, 3rd)"),
-        gr.inputs.Number(default=1.0, label="Sex (male, female)"),
+        gr.inputs.Number(default=1.0, label="Cabin class (1, 2, 3)"),
+        gr.Textbox(default='male', label="Sex (male, female)"),
         gr.inputs.Number(default=1.0, label="SibSp (number of siblings/spouses aboard)"),
         gr.inputs.Number(default=1.0, label="Parch (number of parents/children aboard)"),
-        gr.inputs.Number(default=1.0, label="Embarked (Port of Embarkation)"),
-        gr.inputs.Number(default=1.0, label="Age_type_kid (0 or 1)"),
-        gr.inputs.Number(default=1.0, label="Age_type_teen (0 or 1)"),
-        gr.inputs.Number(default=1.0, label="Age_type_adult (0 or 1)"),
-        gr.inputs.Number(default=1.0, label="Age_type_elder (0 or 1)"),
-        gr.inputs.Number(default=1.0, label="Fare_type_low (0 or 1)"),
-        gr.inputs.Number(default=1.0, label="Fare_type_low_med (0 or 1)"),
-        gr.inputs.Number(default=1.0, label="Fare_type_medium (0 or 1)"),
-        gr.inputs.Number(default=1.0, label="Fare_type_high (0 or 1)"),
+        gr.Textbox(default="S", label="Port of Embarkation (C = Cherbourg, Q = Queenstown, S = Southampton)"),
+        gr.inputs.Number(default=1.0, label="Age"),
+        gr.Textbox(default="low", label="Fare_type (low, medium, high)"),
         ],
     outputs=gr.Image(type="pil"))
 
