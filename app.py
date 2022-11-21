@@ -42,38 +42,38 @@ def iris(Pclass, Sex, SibSp, Parch, Embarked, Age, Fare_type):
     
     ##############################
     if Age <= 12:
-        one_hot_age = [1, 0, 0, 0, 0]
+        one_hot_age = [1, 0, 0, 0]
         for i in one_hot_age:
             input_list.append(i)
-    elif Age <= 18:
-        one_hot_age = [0, 1, 0, 0, 0]
+    elif Age <= 19:
+        one_hot_age = [0, 1, 0, 0]
         for i in one_hot_age:
             input_list.append(i)
-    elif Age <= 30:
-        one_hot_age = [0, 0, 1, 0, 0]
-        for i in one_hot_age:
-            input_list.append(i)
-    elif Age <= 50:
-        one_hot_age = [0, 0, 0, 1, 0]
+    elif Age <= 39:
+        one_hot_age = [0, 0, 1, 0]
         for i in one_hot_age:
             input_list.append(i)
     else:
-        one_hot_age = [0, 0, 0, 0, 1]
+        one_hot_age = [0, 0, 0, 1]
         for i in one_hot_age:
             input_list.append(i)
     ##############################
     
     ##############################
     if Fare_type == "low":
-        one_hot_fare = [1, 0, 0]
+        one_hot_fare = [1, 0, 0, 0]
+        for i in one_hot_fare:
+            input_list.append(i)
+    elif Fare_type == "medium-low":
+        one_hot_fare = [0, 1, 0, 0]
         for i in one_hot_fare:
             input_list.append(i)
     elif Fare_type == "medium": 
-        one_hot_fare = [0, 1, 0]
+        one_hot_fare = [0, 0, 1, 0]
         for i in one_hot_fare:
             input_list.append(i)
     else:
-        one_hot_fare = [0, 0, 1]
+        one_hot_fare = [0, 0, 0, 1]
         for i in one_hot_fare:
             input_list.append(i)
     ##############################
@@ -104,7 +104,7 @@ demo = gr.Interface(
         gr.inputs.Number(default=1.0, label="Parch (number of parents/children aboard)"),
         gr.Textbox(default="S", label="Port of Embarkation (C = Cherbourg, Q = Queenstown, S = Southampton)"),
         gr.inputs.Number(default=1.0, label="Age"),
-        gr.Textbox(default="low", label="Fare_type (low, medium, high)"),
+        gr.Textbox(default="low", label="Fare_type (low, medium-low, medium, high)"),
         ],
     outputs=gr.Image(type="pil"))
 
