@@ -17,7 +17,8 @@ def g():
     import pandas as pd
     #imoprt a logistic regression model from sklearn
     from sklearn.linear_model import LogisticRegression   
-    from sklearn.ensemble import RandomForestClassifier   
+    from sklearn.ensemble import RandomForestClassifier 
+    from sklearn.ensemble import GradientBoostingClassifier
     from sklearn.metrics import accuracy_score
     from sklearn.metrics import confusion_matrix
     from sklearn.metrics import classification_report
@@ -52,7 +53,7 @@ def g():
     X_train, X_test, y_train, y_test = feature_view.train_test_split(0.2)
 
     # Train our model with the Scikit-learn binary classifier algorithm using our features (X_train) and labels (y_train)
-    model = RandomForestClassifier(max_depth=8)
+    model = GradientBoostingClassifier(n_estimators=1000, random_state=42)
     model.fit(X_train, y_train.values.ravel())
 
     # Evaluate model performance using the features from the test set (X_test)
