@@ -2,7 +2,7 @@
 
 ## Authors:
 ### - Jorge Santiago Roman Avila : jsra2@kth.se
-### - Carlo : xxxx@kth.se
+### - Carlo Saccardi: saccardi@kth.se
 <br>
 
 This lab is an implementation of the titanic dataset in a serverless pipeline using Hopsworks and Hugginface spaces to deliver a UI to interact with the project. 
